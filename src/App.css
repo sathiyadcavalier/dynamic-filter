@@ -1,38 +1,115 @@
-.App {
-  text-align: center;
+.dynamicFilter-mainContainer {
+
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.table {
+
+  display: flex;
+  justify-content: center;
+
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+table {
+
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+
+th {
+
+  background: #F4F5F9;
+
+}
+
+table,
+th,
+td {
+
+  border: 2px solid #CFD2DC;
+  padding: 10px;
+  border-collapse: collapse;
+
+}
+
+.filter-container {
+
+  width: 100%;
+
+}
+
+.form {
+
+  margin-bottom: 2rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+}
+
+.form form {
+
+  padding: 10px
+}
+
+.form form select,
+input,
+label {
+
+  padding: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+
+}
+
+input:hover {
+
+  border: 2px solid lightblue;
+
+}
+
+select:hover {
+
+  border: 2px solid lightblue;
+
+}
+
+.filter-container {
+
+  margin-bottom: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
 }
 
-.App-link {
-  color: #61dafb;
+.filter-deco {
+
+  margin-top: 20px;
+
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.filter-deco span {
+
+  cursor: pointer;
+  margin-left: 8px;
+
+}
+
+.filter-border {
+
+  border: 2px solid #CFD2DC;
+  width: 570px;
+  max-height: 300px;
+  overflow-y: auto;
+
+}
+
+.form .minus {
+
+  cursor: pointer;
+
 }
