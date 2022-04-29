@@ -10,36 +10,11 @@ class App extends React.Component {
 
     super(props);
 
+    console.log("Hello World!!")
+
     this.state = {
-      list: [{
 
-        id: 1,
-        data: { name: "Sathiyaseelan", screen_name: "instagram", followers_count: 1200, following_count: 1150, location: "Chennai", verified: true }
-
-      },
-
-      {
-
-        id: 2,
-        data: { name: "Ramanathan", screen_name: "facebook", followers_count: 500, following_count: 700, location: "Kanchipuram", verified: true }
-
-      },
-
-      {
-
-        id: 2,
-        data: { name: "Black Widow", screen_name: "twitter", followers_count: 35000, following_count: 7, location: "Chennai", verified: true }
-
-      },
-
-      {
-
-        id: 2,
-        data: { name: "Elon Musk", screen_name: "twitter", followers_count: 120000, following_count: 35, location: "Chennai", verified: true }
-
-      },
-
-      ],
+      list: [],
 
       filter: [],
 
@@ -48,11 +23,20 @@ class App extends React.Component {
           CONTAINS: { name: "Name", screen_name: "Screen Name", followers_count: "Followers Count", following_count: "Following Count", verified: "true" },
           CONDITIONS: { GTE: ">=", LTE: "<=", EQ: "=" }
         }
-      ]
+      ],
+
 
     };
 
     this.dummy = [];
+
+  }
+
+
+  componentDidMount() {
+
+    const tableData = require("./data/tableData.json");
+    this.setState({ list: tableData });
 
   }
 
@@ -67,7 +51,7 @@ class App extends React.Component {
         <td>{item.data.followers_count}</td>
         <td>{item.data.following_count}</td>
         <td>{item.data.location}</td>
-        <td>{item.data.verified ? "Verified" : "Not Verified"}</td>
+        <td>{item.data.verified ? "Yes" : "No"}</td>
 
       </tr>
 
@@ -76,41 +60,68 @@ class App extends React.Component {
 
   }
 
-  delFilter = () => {
+  delFilter = (index) => {
 
-    this.dummy.pop();
+    let filter = this.state.filter
+    filter.splice(index, 1)
+    this.setState({ filter })
 
-    this.setState({ filter: [...this.dummy] })
-
-    console.log(this.state.filter)
-
+    const tableData = require("./data/tableData.json");
+    this.setState({ list: tableData });
 
   }
 
   addFilter = () => {
 
-    this.dummy.push(1);
-
-    this.setState({ filter: [...this.dummy] })
-
-    console.log(this.state.filter)
+    let obj = { id: "", operator: "", value: "" }
+    let filter = this.state.filter
+    filter.push(obj)
+    this.setState({ filter })
 
 
   }
 
+  handleColumn = (event, index) => {
 
-  getFilterForm = () => {
+    let filter = this.state.filter;
+
+    filter[index].id = event.target.value
+
+    this.setState({ filter })
 
 
-    if (this.state.filter.length === 1) { 
+  }
+
+  handleCondition = (event, index) => {
+
+    let filter = this.state.filter;
+
+    filter[index].operator = event.target.value
+
+    this.setState({ filter })
+
+  }
+
+  handleInput = (event, index) => {
+
+    let filter = this.state.filter;
+
+    filter[index].value = event.target.value
+
+    this.setState({ filter })
+
+  }
+
+  getFilterForm = (index) => {
+
 
     return (
 
-      <form>
+      <>
 
-        <label for="CONTAINS">Where</label>
+        <label for="CONTAINS">{index >= 1 ? 'AND...': 'Where' }</label>
 
-        <select name="CONTAINS" id="CONTAINS">
+        <select id="CONTAINS" onChange={(event) => this.handleColumn(event, index)}>
 
           {this.state.filterDropDown.map((item) => {
 
@@ -118,19 +129,20 @@ class App extends React.Component {
 
               <>
 
-                <option>{item.CONTAINS.name}</option>
-                <option>{item.CONTAINS.screen_name}</option>
-                <option>{item.CONTAINS.followers_count}</option>
-                <option>{item.CONTAINS.following_count}</option>
+                <option value="name">{item.CONTAINS.name}</option>
+                <option value="screen_name">{item.CONTAINS.screen_name}</option>
+                <option value="followers_count">{item.CONTAINS.followers_count}</option>
+                <option value="following_count">{item.CONTAINS.following_count}</option>
 
               </>
 
             )
 
           })}
+
         </select>
 
-        <select name="CONDITIONS" id="CONDITIONS">
+        <select id="CONDITIONS" onChange={(event) => this.handleCondition(event, index)}>
 
           {this.state.filterDropDown.map((item) => {
 
@@ -150,100 +162,114 @@ class App extends React.Component {
 
         </select>
 
-        <input type="text" />
+        <input type="text" onChange={(event) => this.handleInput(event, index)} />
 
-        <span class="minus" onClick={() => this.delFilter()}><FontAwesomeIcon icon={faTrash} /></span>
+        <span class="minus" onClick={() => this.delFilter(index)}><FontAwesomeIcon icon={faTrash} /></span>
 
-      </form>
+      </>
 
     )
 
+
+
   }
 
-    if (this.state.filter.length >= 2) {
 
-      return (
+  handleSumbit = () => {
 
-        <form>
 
-          <select name="CONDITIONS" id="CONDITIONS">
+    const originalList = require("./data/tableData.json");
+    let list = []
+    let loopList = originalList
 
-            <option>AND</option>
-            <option>OR</option>
+    for (let j = 0; j < this.state.filter.length; j++) {
 
-          </select>
+      if (j != 0) {
 
-          <select name="CONTAINS-2" id="CONTAINS-2">
+        loopList = list
+        list = []
 
-            {this.state.filterDropDown.map((item) => {
+      }
 
-              return (
+      for (let i = 0; i < loopList.length; i++) {
 
-                <>
+        let item = loopList[i];
 
-                  <option>{item.CONTAINS.name}</option>
-                  <option>{item.CONTAINS.screen_name}</option>
-                  <option>{item.CONTAINS.followers_count}</option>
-                  <option>{item.CONTAINS.following_count}</option>
+        let filter = this.state.filter[j]
 
-                </>
+        if (filter.operator == ">=") {
 
-              )
+          if (item.data.followers_count >= filter.value) {
 
-            })}
-          </select>
+            list.push(item)
 
-          <select name="CONDITIONS-2" id="CONDITIONS-2">
+          }
 
-            {this.state.filterDropDown.map((item) => {
+        }
 
-              return (
+        if (filter.operator == "<=") {
 
-                <>
+          if (item.data.followers_count <= filter.value) {
 
-                  <option>{item.CONDITIONS.GTE}</option>
-                  <option>{item.CONDITIONS.LTE}</option>
-                  <option>{item.CONDITIONS.EQ}</option>
+            list.push(item)
 
-                </>
+          }
 
-              )
+        }
 
-            })}
+        if (filter.operator == "=") {
 
-          </select>
+          if (item.data.followers_count == filter.value) {
 
-          <input type="text" />
+            list.push(item)
 
-          <span class="minus" onClick={() => this.delFilter()}><FontAwesomeIcon icon={faTrash} /></span>
+          }
 
-        </form>
-      )
+          if (item.data.name == filter.value) {
+
+            list.push(item)
+
+          }
+
+          if (item.data.screen_name == filter.value) {
+
+            list.push(item)
+
+          }
+
+        }
+
+      }
 
     }
 
+    this.setState({ list })
 
   }
 
-render() {
+  render() {
 
-  return (
+    return (
 
-    <>
+      <>
 
-      <div className='dynamicFilter-mainContainer'>
+        <div className='dynamicFilter-mainContainer'>
 
-        <div className='filter-container'>
+          <div className='filter-container'>
 
-          <div className='filter-border'>
+            <div className='filter-border'>
 
-            <div className='form'>
+              <div className='form'>
 
-              {this.state.filter.map(() => this.getFilterForm())}
+                {this.state.filter.map((item, index) => this.getFilterForm(index))}
 
-              <div className='filter-deco'>
+                <div id="submit" onClick={this.handleSumbit}>Submit</div>
 
-                <span onClick={() => this.addFilter()}> <FontAwesomeIcon icon={faPlus} /> Add Filter</span>
+                <div className='filter-deco'>
+
+                  <span onClick={() => this.addFilter()}> <FontAwesomeIcon icon={faPlus} /> Add Filter</span>
+
+                </div>
 
               </div>
 
@@ -251,38 +277,35 @@ render() {
 
           </div>
 
+
+          <div className='table'>
+
+            <table>
+
+              <tr>
+
+                <th>Name</th>
+                <th>Screen Name</th>
+                <th>Followers Count</th>
+                <th>Following Count</th>
+                <th>Location</th>
+                <th>Verified</th>
+
+              </tr>
+
+              {this.state.list.map((item, index) => this.getData(item, index))}
+
+            </table>
+
+          </div>
+
         </div>
 
+      </>
 
-        <div className='table'>
+    );
 
-          <table>
-
-            <tr>
-
-              <th>Name</th>
-              <th>Screen Name</th>
-              <th>Followers Count</th>
-              <th>Following Count</th>
-              <th>Location</th>
-              <th>Verified</th>
-
-            </tr>
-
-            {this.state.list.map((item, index) => this.getData(item, index))}
-
-          </table>
-
-        </div>
-
-      </div>
-
-    </>
-
-  );
-
+  }
 }
-}
-
 
 export default App;

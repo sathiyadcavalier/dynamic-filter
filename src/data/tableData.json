@@ -1,0 +1,29 @@
+[{
+
+    "id": 1,
+    "data": { "name": "Sathiyaseelan", "screen_name": "instagram", "followers_count": 1200, "following_count": 1150, "location": "Chennai", "verified": true }
+
+  },
+
+{
+
+    "id": 2,
+    "data": { "name": "Ramanathan", "screen_name": "facebook", "followers_count": 500, "following_count": 700, "location": "Kanchipuram", "verified": true }
+
+  },
+
+  {
+
+    "id": 3,
+    "data": { "name": "Black Widow", "screen_name": "twitter", "followers_count": 35000, "following_count": 7, "location": "Chennai", "verified": true }
+
+  },
+
+  {
+
+    "id" :4,
+    "data": { "name": "Elon Musk", "screen_name": "twitter", "followers_count": 120000, "following_count": 35, "location": "Chennai", "verified": true }
+
+  }
+
+  ]
